@@ -7,7 +7,31 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { TabBar, TabView } from "react-native-tab-view";
 
 interface PokemonDetails {
+  name: string;
+  types: string[];
+  image: string;
+  height: number;
+  weight: number;
+  abilities: PokemonAbility[];
+  stats: PokemonStat[];
   crySound: string;
+  moves: PokemonMove[];
+}
+
+interface PokemonAbility {
+  name: string;
+  hidden: boolean;
+}
+
+interface PokemonStat {
+  name: string;
+  value: number;
+}
+
+interface PokemonMove {
+  name: string;
+  levelLearnedAt: number;
+  MoveLearnMethod: string;
 }
 
 const AboutRoute = () => (
@@ -33,7 +57,9 @@ const EvolutionRoute = () => (
 );
 
 export default function Details() {
-  const [pokemonDetails, setPokemonDetails] = useState(null);
+  const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const params = useLocalSearchParams<{ name: string }>();
   const layout = useWindowDimensions();
@@ -66,17 +92,41 @@ export default function Details() {
   };
 
   useEffect(() => {
-    try {
-      async function fetchPokemonDetails() {
-        // const response = await fetch(
-        //   `https://pokeapi.co/api/v2/pokemon/${params.name}`,
-        // );
-        // const data = await response.json();
+    async function fetchPokemonDetails() {
+      try {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${params.name}`,
+        );
+        const data = await response.json();
+        const pokemonDetails = {
+          name: data.name,
+          height: data.height,
+          weight: data.weight,
+          crySound: data.cries.latest,
+          abilities: data.abilities.map((el: any) => ({
+            name: el.ability.name,
+            hidden: el.is_hidden,
+          })),
+          image: data.sprites.front_default,
+          types: data.types.map((el: any) => el.type.name),
+          stats: data.stats.map((el: any) => ({
+            name: el.stat.name,
+            value: el.base_stat,
+          })),
+          moves: data.moves.map((el: any) => ({
+            name: el.move.name,
+            levelLearnedAt: el.version_group_details[0].level_learned_at,
+            moveLearnMethod: el.version_group_details[0].move_learn_method.name,
+          })),
+        };
+
+        console.log(JSON.stringify(pokemonDetails));
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
     }
+    fetchPokemonDetails();
   }, []);
 
   return (
