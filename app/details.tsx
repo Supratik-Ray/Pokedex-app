@@ -4,7 +4,7 @@ import { PokemonDetails } from "@/types/pokemonDetails";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams } from "expo-router";
 import React, { useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabBar, TabView } from "react-native-tab-view";
@@ -117,12 +117,21 @@ export default function Details() {
       }}
     >
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <View>
-          <Text>{params.name}</Text>
+        <View style={styles.container}>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 30,
+              fontWeight: "bold",
+              marginTop: 16,
+            }}
+          >
+            {params.name}
+          </Text>
         </View>
         <BottomSheet
           ref={bottomSheetRef}
-          snapPoints={["60%", "70%"]}
+          snapPoints={["60%", "65%"]}
           index={1}
           enablePanDownToClose={false}
           handleIndicatorStyle={{ display: "none" }}
@@ -133,33 +142,47 @@ export default function Details() {
           detached={true}
           enableContentPanningGesture={false}
         >
-          <BottomSheetView style={{ flex: 1, padding: 16 }}>
-            <View style={{ flex: 1 }}>
-              <TabView
-                style={{ height: 400 }}
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                onIndexChange={setIndex}
-                swipeEnabled={true}
-                renderTabBar={(props) => (
-                  <TabBar
-                    {...props}
-                    style={{
-                      backgroundColor: "white",
-                      elevation: 0,
-                      shadowOpacity: 0,
-                    }}
-                    activeColor="black"
-                    inactiveColor="gray"
-                    indicatorStyle={{
-                      backgroundColor: "purple",
-                      height: 3,
-                      borderRadius: 50,
-                    }}
-                  />
-                )}
+          <BottomSheetView
+            style={{ flex: 1, padding: 16, position: "relative" }}
+          >
+            <View
+              style={{
+                position: "absolute",
+                top: -200,
+                alignSelf: "center",
+                zIndex: 50,
+              }}
+            >
+              <Image
+                source={{ uri: pokemonDetails?.image }}
+                height={250}
+                width={250}
               />
             </View>
+            <TabView
+              style={{ height: 400 }}
+              navigationState={{ index, routes }}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              swipeEnabled={true}
+              renderTabBar={(props) => (
+                <TabBar
+                  {...props}
+                  style={{
+                    backgroundColor: "white",
+                    elevation: 0,
+                    shadowOpacity: 0,
+                  }}
+                  activeColor="black"
+                  inactiveColor="gray"
+                  indicatorStyle={{
+                    backgroundColor: "purple",
+                    height: 3,
+                    borderRadius: 50,
+                  }}
+                />
+              )}
+            />
           </BottomSheetView>
         </BottomSheet>
       </GestureHandlerRootView>
