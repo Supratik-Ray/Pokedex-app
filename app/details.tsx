@@ -1,38 +1,12 @@
+import { colorsByType } from "@/constants/colors";
+import { usePokemonDetails } from "@/hooks/usePokemonDetails";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import React, { useRef, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabBar, TabView } from "react-native-tab-view";
-
-interface PokemonDetails {
-  name: string;
-  types: string[];
-  image: string;
-  height: number;
-  weight: number;
-  abilities: PokemonAbility[];
-  stats: PokemonStat[];
-  crySound: string;
-  moves: PokemonMove[];
-}
-
-interface PokemonAbility {
-  name: string;
-  hidden: boolean;
-}
-
-interface PokemonStat {
-  name: string;
-  value: number;
-}
-
-interface PokemonMove {
-  name: string;
-  levelLearnedAt: number;
-  MoveLearnMethod: string;
-}
 
 const AboutRoute = () => (
   <View>
@@ -57,12 +31,8 @@ const EvolutionRoute = () => (
 );
 
 export default function Details() {
-  const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails | null>(
-    null,
-  );
-  const [isLoading, setIsLoading] = useState(true);
   const params = useLocalSearchParams<{ name: string }>();
-  const layout = useWindowDimensions();
+  const { isLoading, pokemonDetails } = usePokemonDetails(params.name);
 
   //bottom-sheet
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -91,53 +61,28 @@ export default function Details() {
     }
   };
 
-  useEffect(() => {
-    async function fetchPokemonDetails() {
-      try {
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${params.name}`,
-        );
-        const data = await response.json();
-        const pokemonDetails = {
-          name: data.name,
-          height: data.height,
-          weight: data.weight,
-          crySound: data.cries.latest,
-          abilities: data.abilities.map((el: any) => ({
-            name: el.ability.name,
-            hidden: el.is_hidden,
-          })),
-          image: data.sprites.front_default,
-          types: data.types.map((el: any) => el.type.name),
-          stats: data.stats.map((el: any) => ({
-            name: el.stat.name,
-            value: el.base_stat,
-          })),
-          moves: data.moves.map((el: any) => ({
-            name: el.move.name,
-            levelLearnedAt: el.version_group_details[0].level_learned_at,
-            moveLearnMethod: el.version_group_details[0].move_learn_method.name,
-          })),
-        };
-
-        console.log(JSON.stringify(pokemonDetails));
-      } catch (error) {
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchPokemonDetails();
-  }, []);
+  if (isLoading) {
+    return (
+      <View style={styles.spinnerContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colorsByType[pokemonDetails?.types[0] as string],
+      }}
+    >
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View>
           <Text>{params.name}</Text>
         </View>
         <BottomSheet
           ref={bottomSheetRef}
-          snapPoints={["50%", "70%"]}
+          snapPoints={["60%", "70%"]}
           index={1}
           enablePanDownToClose={false}
           handleIndicatorStyle={{ display: "none" }}
@@ -145,6 +90,8 @@ export default function Details() {
             borderTopLeftRadius: 50,
             borderTopRightRadius: 50,
           }}
+          detached={true}
+          // enableOverDrag={false}
           enableContentPanningGesture={false}
         >
           <BottomSheetView style={{ flex: 1, padding: 16 }}>
@@ -183,4 +130,5 @@ export default function Details() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
+  spinnerContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
