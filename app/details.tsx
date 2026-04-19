@@ -1,5 +1,6 @@
 import { colorsByType } from "@/constants/colors";
 import { usePokemonDetails } from "@/hooks/usePokemonDetails";
+import { PokemonDetails } from "@/types/pokemonDetails";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams } from "expo-router";
 import React, { useRef, useState } from "react";
@@ -8,23 +9,62 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabBar, TabView } from "react-native-tab-view";
 
-const AboutRoute = () => (
-  <View>
-    <Text>About Content</Text>
+const AboutRoute = ({ pokemonDetails }: { pokemonDetails: PokemonDetails }) => (
+  <View style={styles.aboutContainer}>
+    <View>
+      <Text style={styles.heading}>Pokedex Entry</Text>
+      <Text style={styles.bodyText}>{pokemonDetails.pokedexEntry}</Text>
+    </View>
+    <View>
+      <Text style={styles.heading}>Type</Text>
+      <View style={{ flexDirection: "row", gap: 6 }}>
+        {pokemonDetails.types.map((type) => (
+          <Text
+            style={[styles.typeLabel, { backgroundColor: colorsByType[type] }]}
+            key={type}
+          >
+            {type}
+          </Text>
+        ))}
+      </View>
+    </View>
+    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <View>
+        <Text style={styles.heading}>Weight</Text>
+        <Text style={styles.bodyText}>{pokemonDetails.weight} kg</Text>
+      </View>
+      <View>
+        <Text style={styles.heading}>Height</Text>
+        <Text style={styles.bodyText}>{pokemonDetails.height} m</Text>
+      </View>
+    </View>
+    <View>
+      <Text style={styles.heading}>Abilities</Text>
+      {pokemonDetails.abilities.map((ability, index) => (
+        <Text
+          style={styles.bodyText}
+          key={ability.name}
+        >{`${index + 1}. ${ability.name} ${ability.hidden ? "(hidden)" : ""}`}</Text>
+      ))}
+    </View>
   </View>
 );
 
-const StatsRoute = () => (
+const StatsRoute = ({ pokemonDetails }: { pokemonDetails: PokemonDetails }) => (
   <View>
     <Text>Stats Content</Text>
   </View>
 );
-const MovesRoute = () => (
+const MovesRoute = ({ pokemonDetails }: { pokemonDetails: PokemonDetails }) => (
   <View>
     <Text>Stats Content</Text>
   </View>
 );
-const EvolutionRoute = () => (
+const EvolutionRoute = ({
+  pokemonDetails,
+}: {
+  pokemonDetails: PokemonDetails;
+}) => (
   <View>
     <Text>Stats Content</Text>
   </View>
@@ -49,13 +89,13 @@ export default function Details() {
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
       case "about":
-        return <AboutRoute />;
+        return <AboutRoute pokemonDetails={pokemonDetails!} />;
       case "stats":
-        return <StatsRoute />;
+        return <StatsRoute pokemonDetails={pokemonDetails!} />;
       case "evolution":
-        return <EvolutionRoute />;
+        return <EvolutionRoute pokemonDetails={pokemonDetails!} />;
       case "moves":
-        return <MovesRoute />;
+        return <MovesRoute pokemonDetails={pokemonDetails!} />;
       default:
         return null;
     }
@@ -91,7 +131,6 @@ export default function Details() {
             borderTopRightRadius: 50,
           }}
           detached={true}
-          // enableOverDrag={false}
           enableContentPanningGesture={false}
         >
           <BottomSheetView style={{ flex: 1, padding: 16 }}>
@@ -131,4 +170,19 @@ export default function Details() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   spinnerContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  aboutContainer: { flex: 1, padding: 16, gap: 16 },
+  heading: { fontSize: 22, fontWeight: "bold" },
+  bodyText: { fontSize: 17, color: "gray" },
+  typeLabel: {
+    width: 75,
+    borderRadius: 50,
+    padding: 2,
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+    flexDirection: "row",
+    textAlign: "center",
+    marginTop: 8,
+    elevation: 3,
+  },
 });

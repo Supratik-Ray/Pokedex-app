@@ -8,6 +8,7 @@ export interface PokemonDetails {
   stats: PokemonStat[];
   crySound: string;
   moves: PokemonMove[];
+  pokedexEntry: string;
 }
 
 export interface PokemonAbility {
