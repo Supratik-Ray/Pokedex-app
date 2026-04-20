@@ -1,11 +1,19 @@
-import { colorsByType } from "@/constants/colors";
+import { colorsByType, statColors } from "@/constants/colors";
+import { statNameMap } from "@/constants/mappings";
 import { usePokemonDetails } from "@/hooks/usePokemonDetails";
 import { PokemonDetails } from "@/types/pokemonDetails";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams } from "expo-router";
 import React, { useRef, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabBar, TabView } from "react-native-tab-view";
 
@@ -50,14 +58,88 @@ const AboutRoute = ({ pokemonDetails }: { pokemonDetails: PokemonDetails }) => (
   </View>
 );
 
-const StatsRoute = ({ pokemonDetails }: { pokemonDetails: PokemonDetails }) => (
-  <View>
-    <Text>Stats Content</Text>
-  </View>
-);
+const StatsRoute = ({ pokemonDetails }: { pokemonDetails: PokemonDetails }) => {
+  const { width } = useWindowDimensions();
+  const BAR_MAX_WIDTH = width - 180; // space for label + value
+
+  return (
+    <View style={{ padding: 16, gap: 10 }}>
+      <Text style={styles.heading}>Base Stats</Text>
+      {pokemonDetails.stats.map((stat, i) => {
+        const barWidth = (stat.value / 255) * BAR_MAX_WIDTH;
+        const color = statColors[i]?.frontColor ?? "#888";
+
+        return (
+          <View
+            key={stat.name}
+            style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+          >
+            {/* Stat name */}
+            <Text
+              style={{
+                width: 80,
+                fontSize: 12,
+                color: "#888",
+                textAlign: "right",
+              }}
+            >
+              {statNameMap[stat.name]}
+            </Text>
+            {/* Bar */}
+            <View
+              style={{
+                width: BAR_MAX_WIDTH,
+                backgroundColor: "#eee",
+                borderRadius: 10,
+                height: 10,
+              }}
+            >
+              <View
+                style={{
+                  width: barWidth,
+                  backgroundColor: color,
+                  borderRadius: 10,
+                  height: 10,
+                }}
+              />
+            </View>
+            {/* Value */}
+            <Text style={{ fontSize: 12, color: "#888", width: 30 }}>
+              {stat.value}
+            </Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+};
 const MovesRoute = ({ pokemonDetails }: { pokemonDetails: PokemonDetails }) => (
-  <View>
-    <Text>Stats Content</Text>
+  <View style={styles.container}>
+    <Text style={styles.heading}>Moves learned</Text>
+    <FlatList
+      data={pokemonDetails.moves}
+      keyExtractor={(item) => item.name}
+      contentContainerStyle={{ gap: 12, marginTop: 16, padding: 8 }}
+      renderItem={({ item: move }) => {
+        return (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+
+              backgroundColor: "#fff",
+              elevation: 3,
+              padding: 16,
+              borderRadius: 20,
+            }}
+          >
+            <Text style={styles.bodyText}>{move.name}</Text>
+            {/* <Text>{move.levelLearnedAt}</Text> */}
+            {/* <Text>{move.MoveLearnMethod}</Text> */}
+          </View>
+        );
+      }}
+    />
   </View>
 );
 const EvolutionRoute = ({
@@ -65,8 +147,27 @@ const EvolutionRoute = ({
 }: {
   pokemonDetails: PokemonDetails;
 }) => (
-  <View>
-    <Text>Stats Content</Text>
+  <View style={styles.container}>
+    <Text style={styles.heading}>Evolution chain</Text>
+    {pokemonDetails.evolutionChain.map((stage) => (
+      <View
+        key={stage.name}
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Image source={{ uri: stage.image }} height={100} width={100} />
+        <Text>
+          {stage.method === "Base form"
+            ? "Doesn't evolve further"
+            : stage.method.startsWith("Level")
+              ? `Evolves at ${stage.method}`
+              : stage.method}
+        </Text>
+      </View>
+    ))}
   </View>
 );
 
@@ -132,7 +233,10 @@ export default function Details() {
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={["60%", "65%"]}
-          index={1}
+          index={0}
+          enableOverDrag={false}
+          enableDynamicSizing={false}
+          enableHandlePanningGesture={false}
           enablePanDownToClose={false}
           handleIndicatorStyle={{ display: "none" }}
           backgroundStyle={{
@@ -160,7 +264,7 @@ export default function Details() {
               />
             </View>
             <TabView
-              style={{ height: 400 }}
+              style={{ height: 500 }}
               navigationState={{ index, routes }}
               renderScene={renderScene}
               onIndexChange={setIndex}

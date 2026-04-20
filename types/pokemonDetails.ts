@@ -9,6 +9,7 @@ export interface PokemonDetails {
   crySound: string;
   moves: PokemonMove[];
   pokedexEntry: string;
+  evolutionChain: Evolution[];
 }
 
 export interface PokemonAbility {
@@ -25,4 +26,10 @@ export interface PokemonMove {
   name: string;
   levelLearnedAt: number;
   MoveLearnMethod: string;
+}
+
+export interface Evolution {
+  name: string;
+  method: string;
+  image: string;
 }

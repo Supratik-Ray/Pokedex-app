@@ -18,3 +18,12 @@ export const colorsByType: Record<string, string> = {
   steel: "#B5B8C0", // soft metallic gray
   fairy: "#F3B7E6", // soft pastel pink-lilac
 };
+
+export const statColors = [
+  { frontColor: "#FF5959", gradientColor: "#FF9999", label: "HP" },
+  { frontColor: "#F5AC78", gradientColor: "#FAD4B0", label: "ATK" },
+  { frontColor: "#FAE078", gradientColor: "#FFF0BB", label: "DEF" },
+  { frontColor: "#9DB7F5", gradientColor: "#C8D8FA", label: "SpA" },
+  { frontColor: "#A7DB8D", gradientColor: "#CFF0BB", label: "SpD" },
+  { frontColor: "#FA92B2", gradientColor: "#FCC4D4", label: "SPD" },
+];
