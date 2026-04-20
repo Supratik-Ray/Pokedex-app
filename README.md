@@ -1,50 +1,107 @@
-# Welcome to your Expo app 👋
+# 📱 Pokédex App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A sleek and responsive Pokédex application built with Expo to explore Pokémon data including stats, abilities, moves, and evolution chains.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-   ```bash
-   npm install
-   ```
+* 📊 View detailed stats (HP, Attack, Defense, etc.)
+* 🧬 Evolution chain with methods (level, item, happiness, etc.)
+* 🎮 Moves and abilities breakdown
+* 🖼️ Pokémon sprites and visuals
+* ⚡ Fast and responsive UI
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 📸 Screenshots
 
-In the output, you'll find options to open the app in a
+### 🏠 Home Screen
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+![Home](./assets/screenshots/ss1.png)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 🔍 Search & Details
 
-## Get a fresh project
+![Search](./assets/screenshots/ss2.png)
 
-When you're ready, run:
+### 📊 Stats View
 
-```bash
-npm run reset-project
+![Stats](./assets/screenshots/ss3.png)
+
+### 🧬 Evolution Chain
+
+![Evolution](./assets/screenshots/ss4.png)
+
+### 🎮 Moves & Abilities
+
+![Moves](./assets/screenshots/ss5.png)
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend:** Expo (React Native)
+* **State Management:** React Hooks
+* **API:** https://pokeapi.co/
+* **Styling:** React Native Styles
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+├── components/
+├── hooks/
+│   └── usePokemonDetails.ts
+├── types/
+├── utils/
+└── screens/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## ⚙️ Installation
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+# Clone the repo
+git clone https://github.com/your-username/pokedex-app.git
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Navigate into project
+cd pokedex-app
 
-## Join the community
+# Install dependencies
+npm install
 
-Join our community of developers creating universal apps.
+# Start Expo
+npx expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 🌐 API Reference
+
+* `/pokemon/{name}`
+* `/pokemon-species/{name}`
+* `/evolution-chain/{id}`
+
+---
+
+## ✨ Future Improvements
+
+* 🔀 Handle branching evolutions (e.g. Eevee)
+* 🎨 UI/UX polish and animations
+* 🌙 Dark mode
+* 📱 Better responsiveness across devices
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 🙌 Acknowledgements
+
+* PokeAPI for providing free Pokémon data
