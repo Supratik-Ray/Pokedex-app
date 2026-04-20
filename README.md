@@ -18,23 +18,23 @@ A sleek and responsive Pokédex application built with Expo to explore Pokémon 
 
 ### 🏠 Home Screen
 
-![Home](./assets/screenshots/ss1.png)
+![Home](./assets/screenshots/ss1.jpeg)
 
 ### 🔍 Search & Details
 
-![Search](./assets/screenshots/ss2.png)
+![Search](./assets/screenshots/ss2.jpeg)
 
 ### 📊 Stats View
 
-![Stats](./assets/screenshots/ss3.png)
+![Stats](./assets/screenshots/ss3.jpeg)
 
 ### 🧬 Evolution Chain
 
-![Evolution](./assets/screenshots/ss4.png)
+![Evolution](./assets/screenshots/ss4.jpeg)
 
 ### 🎮 Moves & Abilities
 
-![Moves](./assets/screenshots/ss5.png)
+![Moves](./assets/screenshots/ss5.jpeg)
 
 ---
 
